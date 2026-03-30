@@ -19,7 +19,7 @@ The goal is to produce a clean dataset suitable for further statistical analysis
 
 ## R Environment
 
-* **R Version:** 4.5
+* **R Version:** 4.5.3
 * **IDE:** RStudio (Windows)
 * **Key Packages Used:**
 
@@ -135,7 +135,6 @@ Outlier detection was performed using two approaches:
   * `imputed_dataset_pmm.csv` (PMM method)
   * `imputed_dataset_rf.csv` (Random Forest method)
 * **Graphs:** Plots illustrating missing data patterns, imputation validation, boxplots for outlier detection, and LOF scatterplots
-* **Additional outputs:** Summaries or tables generated during preprocessing and analysis
 
 ---
 
