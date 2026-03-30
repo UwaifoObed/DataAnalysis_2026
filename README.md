@@ -1,7 +1,9 @@
 # Data Analysis — Semester Projects
 
 **Course:** Data Analysis
+
 **University:** Irkutsk National Research Technical University
+
 **BRICS**
 
 ---
