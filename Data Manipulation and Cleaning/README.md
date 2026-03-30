@@ -1,8 +1,4 @@
-Absolutely! Here's a **GitHub-ready README.md** version with **no code**, just **detailed descriptions of every task and step** performed in your R script. It’s professional, clear, and self-contained:
-
----
-
-# 📊 Data Analysis Project: Missing Data Handling & Outlier Detection
+# Data Analysis Project: Missing Data Handling & Outlier Detection
 
 ## Overview
 
@@ -16,8 +12,8 @@ The goal is to produce a clean dataset suitable for further statistical analysis
 
 * **File Name:** `DataSet_No_Details.csv`
 * **Description:** Contains both numeric and categorical variables, including hormonal and lipid measurements, as well as demographic factors.
-* **Observations & Variables:** [Insert actual numbers here]
-* **Source:** Local machine
+* **Observations & Variables:** A dataset that contains clical and medical measurements across 1,148 records and 41 variables.
+* **Source:** Professor Аталян Алина Валерьевна
 
 ---
 
