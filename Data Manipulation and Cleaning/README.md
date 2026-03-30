@@ -8,12 +8,54 @@ The goal is to produce a clean dataset suitable for further statistical analysis
 
 ---
 
-## Dataset
+## Dataset Description
 
 * **File Name:** `DataSet_No_Details.csv`
-* **Description:** Contains both numeric and categorical variables, including hormonal and lipid measurements, as well as demographic factors.
-* **Observations & Variables:** A dataset that contains clical and medical measurements across 1,148 records and 41 variables.
-* **Source:** Professor Аталян Алина Валерьевна
+
+The dataset contains **1,148 observations and 41 variables**, consisting of both **numeric and categorical features** related to biological and clinical measurements.
+
+### Key Characteristics
+
+* **Hormonal Variables:**
+  Multiple variables (`hormone1` to `hormone14`) representing different hormone levels, indicating physiological measurements across subjects.
+
+* **Derived Indices:**
+  Calculated indices such as `h_index_34` and `h_index_56`, which likely represent relationships or ratios between hormone groups.
+
+* **Lipid Variables:**
+  Variables such as `lipids1` to `lipids5`, used for metabolic or biochemical analysis.
+
+* **Categorical Factors:**
+  Includes variables such as:
+
+  * `outcome` (binary target variable)
+  * `factor_eth` (ethnicity)
+  * `factor_h`, `factor_pcos`, `factor_prl` (clinical or diagnostic indicators)
+
+* **Identifier:**
+
+  * `record_id` uniquely identifies each observation.
+
+---
+
+### Data Quality Notes
+
+* The dataset contains **missing values across multiple variables**, with some variables having significant missingness.
+* Certain variables (e.g., hormone-related features) exhibit **wide ranges and potential outliers**, making preprocessing essential.
+* A mix of **low-missing and high-missing variables** requires careful handling through filtering and imputation techniques.
+
+---
+
+### Purpose of the Dataset
+
+This dataset is suitable for:
+
+* **Missing data analysis and imputation**
+* **Exploratory data analysis (EDA)**
+* **Outlier detection**
+* **Statistical modeling and prediction tasks**
+
+It provides a realistic scenario for applying **data cleaning, transformation, and advanced analytical techniques** in R.
 
 ---
 
