@@ -1,0 +1,221 @@
+#--------------------start-------------------------------
+# Get current working directory
+getwd()
+
+#----------------read dataset--------------------------
+example_df<-read.csv("C:/Users/OBED/Videos/Masters/Second Semester/Data Analysis/Homework 2/distribution.csv", header = TRUE,dec = ',', sep = ";")
+factor_df <- read.csv("C:/Users/OBED/Videos/Masters/Second Semester/Data Analysis/Homework 2/factor_data.csv")
+imputed_df <- read.csv("C:/Users/OBED/Videos/Masters/Second Semester/Data Analysis/Homework 2/imputed_data.csv")
+
+# Display structure with variable types
+str(example_df)
+str(factor_df)
+str(imputed_df)
+
+#---------------merge two files-------------------------
+data_for_analysis <- merge(
+  factor_df, 
+  imputed_df, 
+  by = "record_id",        # column for merge
+  all = FALSE       # FALSE = INNER JOIN (only coincidences), TRUE = FULL JOIN
+)
+
+str(data_for_analysis)
+
+# save data_for_analysis in CSV
+write.csv(data_for_analysis, "data_for_analysis.csv", row.names = FALSE)  
+
+#------------------Probability Distributions----------------------- 
+install.packages("MASS", dependencies=T)
+library(MASS)
+
+#----------------example-----------------------------------------
+summary (example_df)
+example_df$value <- as.numeric(example_df$value)
+summary(example_df)
+
+#building histograms for example
+# normal distribution
+val<-example_df[example_df$distribution=="norm",]$value
+mean(val)
+sd(val)
+hist(val)
+fit<-fitdistr(val, densfun="normal")
+fit
+
+#lognormal distribution
+val<-example_df[example_df$distribution=="lognorm",]$value
+mean(val)
+sd(val)
+hist(val)
+fit<-fitdistr(val, densfun="lognormal")
+fit
+
+unname(fit$estimate[1])
+unname(fit$estimate[2])
+
+m_log<-exp(unname(fit$estimate[1]))*sqrt(exp(unname(fit$estimate[2])^2))
+m_log
+
+sd_log<-sqrt(exp(2*unname(fit$estimate[1]))*(exp(unname(fit$estimate[2])^2)-1)*sqrt(exp(unname(fit$estimate[2])^2)))
+sd_log
+
+#exponential distribution
+val<-example_df[example_df$distribution=="exp",]$value
+mean(val)
+sd(val)
+hist(val)
+fit<-fitdistr(val, densfun="exponential")
+fit
+
+unname(fit$estimate[1])
+m_exp<-1/unname(fit$estimate[1])
+m_exp
+
+#Poisson distribution
+val<-example_df[example_df$distribution=="pois",]$value
+mean(val)
+sd(val)
+hist(val)
+fit<-fitdistr(val, densfun="Poisson")
+fit
+
+unname(fit$estimate[1])
+sd_pois<-sqrt(unname(fit$estimate[1]))
+sd_pois
+
+#Selecting a Distribution Model
+val<-example_df[example_df$distribution=="lognorm",]$value
+fit_1<-fitdistr(val, densfun="normal")
+fit_2<-fitdistr(val, densfun="lognormal")
+fit_3<-fitdistr(val, densfun="exponential")
+
+#Bayesian Information Criterion calculation
+BIC(fit_3)
+
+#calculation of the Bayesian information criterion for all models
+BIC_value<-c(BIC(fit_1), BIC(fit_2), BIC(fit_3))
+
+#forming a vector with the name of the models
+distribution<-c("normal", "lognormal", "exponential")
+
+#combining the results into a final table
+rez<-data.frame(BIC_value=BIC_value, distribution=distribution)
+
+#sort table in ascending order of Bayesian Information Criterion value
+rez<-rez[order(rez$BIC_value, decreasing=F),]
+rez
+
+#calculation of absolute values of the confidence interval for the mean of a lognormal distribution
+error_min<-unname(fit_2$estimate[1])-unname(fit_2$sd[1])
+error_max<-unname(fit_2$estimate[1])+unname(fit_2$sd[1])
+
+error_min
+error_max
+
+m<-exp(unname(fit_2$estimate[1]))*sqrt(exp(unname(fit_2$estimate[2])^2))
+value_error_min<-exp(error_min)*sqrt(exp(unname(fit_2$estimate[2])^2))
+value_error_max<-exp(error_max)*sqrt(exp(unname(fit_2$estimate[2])^2))
+
+value_error_min
+m
+value_error_max
+
+#--------------data for analysis--------------------------
+#building histograms
+value_d1<-data_for_analysis$lipids1
+hist(value_d1)
+
+value_d2<-data_for_analysis$lipids2
+hist(value_d2)
+
+value_d3<-data_for_analysis$lipids3
+hist(value_d3)
+
+value_d4<-data_for_analysis$lipids4
+hist(value_d4)
+
+# d1 distribution estimate
+fit_d1_1<-fitdistr(value_d1,densfun="normal")
+fit_d1_2<-fitdistr(value_d1,densfun="lognormal")
+fit_d1_3<-fitdistr(value_d1,densfun="exponential")
+
+#calculation of the Bayesian information criterion (BIC) and finding of BIC minimum for d1
+BIC_value_d1 <- c(BIC(fit_d1_1),BIC(fit_d1_2),BIC(fit_d1_3))
+distribution <-c("normal","lognormal","exponential")
+result_d1<-data.frame(BIC_value_d1=BIC_value_d1, distribution=distribution)
+result_d1
+
+distribution_d1<-result_d1[result_d1$BIC_value_d1==min(result_d1$BIC_value_d1),]$distribution
+distribution_d1
+
+# Finding parameters for d1
+fit_d1_1$estimate[1:2]
+
+# d2 distribution estimate
+fit_d2_1<-fitdistr(value_d2,densfun="normal")
+fit_d2_2<-fitdistr(value_d2,densfun="lognormal")
+fit_d2_3<-fitdistr(value_d2,densfun="exponential")
+
+#calculation of the Bayesian information criterion (BIC) and finding of BIC minimum for d2
+BIC_value_d2 <- c(BIC(fit_d2_1),BIC(fit_d2_2),BIC(fit_d2_3))
+distribution <-c("normal","lognormal","exponential")
+result_d2<-data.frame(BIC_value_d2=BIC_value_d2, distribution=distribution)
+result_d2
+
+distribution_d2<-result_d2[result_d2$BIC_value_d2==min(result_d2$BIC_value_d2),]$distribution
+distribution_d2
+
+# Finding parameters for d2
+fit_d2_1$estimate[1:2]
+
+
+# EXTRA TASK: fix missing lipids5
+sum(is.na(data_for_analysis$lipids5))
+
+data_for_analysis$lipids5[is.na(data_for_analysis$lipids5)] <- 
+  mean(data_for_analysis$lipids5, na.rm = TRUE)
+
+# MAIN TASK: ANALYSIS BY GROUP (outcome)
+
+variables <- c("lipids1","lipids2","lipids3","lipids4","lipids5")
+
+final_table <- data.frame()
+
+for (var in variables){
+  
+  # split by group
+  value_g0 <- data_for_analysis[data_for_analysis$outcome==0, var]
+  value_g1 <- data_for_analysis[data_for_analysis$outcome==1, var]
+  
+  value_g0 <- na.omit(value_g0)
+  value_g1 <- na.omit(value_g1)
+  
+  # GROUP 0
+  fit_g0_1<-fitdistr(value_g0,"normal")
+  fit_g0_2<-fitdistr(value_g0,"lognormal")
+  fit_g0_3<-fitdistr(value_g0,"exponential")
+  
+  BIC_g0 <- c(BIC(fit_g0_1),BIC(fit_g0_2),BIC(fit_g0_3))
+  dist <- c("normal","lognormal","exponential")
+  best_g0 <- dist[which.min(BIC_g0)]
+  
+  # GROUP 1
+  fit_g1_1<-fitdistr(value_g1,"normal")
+  fit_g1_2<-fitdistr(value_g1,"lognormal")
+  fit_g1_3<-fitdistr(value_g1,"exponential")
+  
+  BIC_g1 <- c(BIC(fit_g1_1),BIC(fit_g1_2),BIC(fit_g1_3))
+  best_g1 <- dist[which.min(BIC_g1)]
+  
+  final_table <- rbind(final_table,
+                       data.frame(Variable=var, Group=0, Distribution=best_g0),
+                       data.frame(Variable=var, Group=1, Distribution=best_g1)
+  )
+  
+  cat("\nVariable:", var, "\n")
+  cat("Group 0 BIC:", BIC_g0, "\n")
+  cat("Group 1 BIC:", BIC_g1, "\n")
+}
+
+final_table
