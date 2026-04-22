@@ -135,46 +135,15 @@ hist(value_d3)
 value_d4<-data_for_analysis$lipids4
 hist(value_d4)
 
-# d1 distribution estimate
-fit_d1_1<-fitdistr(value_d1,densfun="normal")
-fit_d1_2<-fitdistr(value_d1,densfun="lognormal")
-fit_d1_3<-fitdistr(value_d1,densfun="exponential")
-
-#calculation of the Bayesian information criterion (BIC) and finding of BIC minimum for d1
-BIC_value_d1 <- c(BIC(fit_d1_1),BIC(fit_d1_2),BIC(fit_d1_3))
-distribution <-c("normal","lognormal","exponential")
-result_d1<-data.frame(BIC_value_d1=BIC_value_d1, distribution=distribution)
-result_d1
-
-distribution_d1<-result_d1[result_d1$BIC_value_d1==min(result_d1$BIC_value_d1),]$distribution
-distribution_d1
-
-# Finding parameters for d1
-fit_d1_1$estimate[1:2]
-
-# d2 distribution estimate
-fit_d2_1<-fitdistr(value_d2,densfun="normal")
-fit_d2_2<-fitdistr(value_d2,densfun="lognormal")
-fit_d2_3<-fitdistr(value_d2,densfun="exponential")
-
-#calculation of the Bayesian information criterion (BIC) and finding of BIC minimum for d2
-BIC_value_d2 <- c(BIC(fit_d2_1),BIC(fit_d2_2),BIC(fit_d2_3))
-distribution <-c("normal","lognormal","exponential")
-result_d2<-data.frame(BIC_value_d2=BIC_value_d2, distribution=distribution)
-result_d2
-
-distribution_d2<-result_d2[result_d2$BIC_value_d2==min(result_d2$BIC_value_d2),]$distribution
-distribution_d2
-
-# Finding parameters for d2
-fit_d2_1$estimate[1:2]
-
-
-# EXTRA TASK: fix missing lipids5
+# EXTRA TASK: FIX MISSING lipids5
+cat("\nMissing values in lipids5 BEFORE:\n")
 sum(is.na(data_for_analysis$lipids5))
 
 data_for_analysis$lipids5[is.na(data_for_analysis$lipids5)] <- 
   mean(data_for_analysis$lipids5, na.rm = TRUE)
+
+cat("Missing values in lipids5 AFTER:\n")
+sum(is.na(data_for_analysis$lipids5))
 
 # MAIN TASK: ANALYSIS BY GROUP (outcome)
 
@@ -184,6 +153,9 @@ final_table <- data.frame()
 
 for (var in variables){
   
+  cat("\n====================================\n")
+  cat("Variable:", var, "\n")
+  
   # split by group
   value_g0 <- data_for_analysis[data_for_analysis$outcome==0, var]
   value_g1 <- data_for_analysis[data_for_analysis$outcome==1, var]
@@ -191,31 +163,53 @@ for (var in variables){
   value_g0 <- na.omit(value_g0)
   value_g1 <- na.omit(value_g1)
   
-  # GROUP 0
+  # Histograms by group
+  par(mfrow=c(1,2))
+  hist(value_g0, main=paste(var,"- Group 0"), col="lightblue")
+  hist(value_g1, main=paste(var,"- Group 1"), col="lightgreen")
+  par(mfrow=c(1,1))
+  
+  #================ GROUP 0 ======================
   fit_g0_1<-fitdistr(value_g0,"normal")
   fit_g0_2<-fitdistr(value_g0,"lognormal")
   fit_g0_3<-fitdistr(value_g0,"exponential")
   
   BIC_g0 <- c(BIC(fit_g0_1),BIC(fit_g0_2),BIC(fit_g0_3))
   dist <- c("normal","lognormal","exponential")
+  
+  # Show BIC table
+  cat("\nGroup 0 BIC:\n")
+  print(data.frame(Distribution=dist, BIC=BIC_g0))
+  
   best_g0 <- dist[which.min(BIC_g0)]
   
-  # GROUP 1
+  cat("Best distribution Group 0:", best_g0, "\n")
+  
+  #================ GROUP 1 ======================
   fit_g1_1<-fitdistr(value_g1,"normal")
   fit_g1_2<-fitdistr(value_g1,"lognormal")
   fit_g1_3<-fitdistr(value_g1,"exponential")
   
   BIC_g1 <- c(BIC(fit_g1_1),BIC(fit_g1_2),BIC(fit_g1_3))
+  
+  # Show BIC table
+  cat("\nGroup 1 BIC:\n")
+  print(data.frame(Distribution=dist, BIC=BIC_g1))
+  
   best_g1 <- dist[which.min(BIC_g1)]
   
+  cat("Best distribution Group 1:", best_g1, "\n")
+  
+  #================ SAVE RESULTS ======================
   final_table <- rbind(final_table,
                        data.frame(Variable=var, Group=0, Distribution=best_g0),
                        data.frame(Variable=var, Group=1, Distribution=best_g1)
   )
-  
-  cat("\nVariable:", var, "\n")
-  cat("Group 0 BIC:", BIC_g0, "\n")
-  cat("Group 1 BIC:", BIC_g1, "\n")
 }
 
-final_table
+# FINAL OUTPUT TABLE
+cat("\n================ FINAL TABLE ================\n")
+print(final_table)
+
+# save results
+write.csv(final_table, "final_results.csv", row.names = FALSE)
