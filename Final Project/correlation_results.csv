@@ -1,0 +1,12 @@
+"Variable_Pair","Method","Correlation","P_Value"
+"Outcome vs Glucose","Point-Biserial",0.488,1.15e-44
+"Outcome vs BMI","Point-Biserial",0.299,1.86e-16
+"Outcome vs Age","Point-Biserial",0.246,2.03e-11
+"Outcome vs BloodPressure","Point-Biserial",0.167,6.5e-06
+"Glucose vs BMI","Pearson",0.223,1.25e-09
+"Age vs BloodPressure","Pearson",0.325,2.92e-19
+"Age vs Pregnancies","Spearman",0.617,4.91e-77
+"Pregnancies vs BMI","Spearman",-0.002,0.967
+"Pregnancies vs Glucose","Spearman",0.138,0.000201
+"DPF vs Glucose","Spearman",0.086,0.0211
+"DPF vs BMI","Spearman",0.129,0.000512
