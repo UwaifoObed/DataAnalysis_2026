@@ -123,22 +123,6 @@ A supplementary comparison showed that participants with diabetes had significan
 - Base R statistical functions
 - RStudio
 
-## Repository Structure
-
-```
-Final-Project/
-│
-├── diabetes.csv
-├── correlation_analysis.R
-├── Output/
-│   ├── histograms
-│   ├── scatterplots
-│   ├── heatmap
-│   └── boxplots
-├── Final_Report.pdf
-└── README.md
-```
-
 ## References
 
 - Field, A., Miles, J., & Field, Z. (2012). *Discovering Statistics Using R*. SAGE Publications.
